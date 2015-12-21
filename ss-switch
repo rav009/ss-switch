@@ -1,0 +1,32 @@
+#!/usr/bin/env python
+#coding:utf8
+
+import sys
+
+if __name__ == '__main__':
+    mode = 'None'
+    help = '''usage: ss-switch <operation>
+Operations:
+    add             add a new entry.
+    delete value    delete an existed entry by ID.
+    show            show all entries.
+    use value       choose an entry by ID to use.'''
+    if len(sys.argv)>1:
+        mode = str(sys.argv[1]).lower()
+    if mode in ['use','delete'] and len(sys.argv)<=2:
+	print help
+    elif mode in ['use','delete'] and str(sys.argv[2]).isdigit() == False:
+	print help
+    else:
+    	if mode == 'add':
+        	print 'add'
+    	elif mode == 'delete':
+		v = int(sys.argv[2])
+        	print 'delete %d'%v
+    	elif mode == 'show':
+        	print 'show'
+    	elif mode == 'use':
+		v = int(sys.argv[2])
+        	print 'use %d'%v
+    	else:
+        	print help
