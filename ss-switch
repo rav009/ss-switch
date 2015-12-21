@@ -3,6 +3,25 @@
 
 import sys
 
+def add():
+    name = raw_input('Please input a name for this entry: ')
+    port = raw_input('Please input the port number: ')
+    ip = raw_input('Please input the ip address: ')
+    password = raw_input('Please input the password: ')
+    if not port.isdigit():
+        raise Exception('Port is not a valid number.')
+    return
+
+def delete(id):
+    pass
+
+def use(id):
+    pass
+
+def show():
+	pass
+
+
 if __name__ == '__main__':
     mode = 'None'
     help = '''usage: ss-switch <operation>
@@ -14,19 +33,18 @@ Operations:
     if len(sys.argv)>1:
         mode = str(sys.argv[1]).lower()
     if mode in ['use','delete'] and len(sys.argv)<=2:
-	print help
+        print help
     elif mode in ['use','delete'] and str(sys.argv[2]).isdigit() == False:
-	print help
+        print help
     else:
     	if mode == 'add':
-        	print 'add'
+            add()
     	elif mode == 'delete':
-		v = int(sys.argv[2])
-        	print 'delete %d'%v
+            v = int(sys.argv[2])
+            delete(v)
     	elif mode == 'show':
-        	print 'show'
+        	show()
     	elif mode == 'use':
-		v = int(sys.argv[2])
-        	print 'use %d'%v
-    	else:
-        	print help
+            use(v)
+        else:
+            print help
