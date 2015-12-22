@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-#coding:utf8
 
 import sys
 import os
@@ -14,10 +13,10 @@ def add():
     else:
         port = int(port)
     os.system('uci add ss-switch ss_entry')
-    os.system('uci set ss-switch.@ss_entry[-1].name=%s'%name)
+    os.system('uci set ss-switch.@ss_entry[-1].name="%s"'%name)
+    os.system('uci set ss-switch.@ss_entry[-1].ip="%s"'%ip)
     os.system('uci set ss-switch.@ss_entry[-1].port=%d'%port)
-    os.system('uci set ss-switch.@ss_entry[-1].ip=%s'%ip)
-    os.system('uci set ss-switch.@ss_entry[-1].password=%s'%password)
+    os.system('uci set ss-switch.@ss_entry[-1].password="%s"'%password)
     os.system('uci commit ss-switch')
     return
 
@@ -37,7 +36,8 @@ def show():
 
 if __name__ == '__main__':
     if not os.path.exists('/etc/config/ss-switch'):
-        open('/etc/config/ss-switch','rw')
+        f=open('/etc/config/ss-switch','w')
+	f.close()
     mode = 'None'
     help = '''usage: ss-switch <operation>
 Operations:
