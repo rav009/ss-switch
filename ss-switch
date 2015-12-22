@@ -2,6 +2,7 @@
 #coding:utf8
 
 import sys
+import os
 
 def add():
     name = raw_input('Please input a name for this entry: ')
@@ -10,26 +11,40 @@ def add():
     password = raw_input('Please input the password: ')
     if not port.isdigit():
         raise Exception('Port is not a valid number.')
+    else:
+        port = int(port)
+    os.system('uci add ss-switch ss_entry')
+    os.system('uci set ss-switch.@ss_entry[-1].name=%s'%name)
+    os.system('uci set ss-switch.@ss_entry[-1].port=%d'%port)
+    os.system('uci set ss-switch.@ss_entry[-1].ip=%s'%ip)
+    os.system('uci set ss-switch.@ss_entry[-1].password=%s'%password)
+    os.system('uci commit ss-switch')
     return
 
 def delete(id):
-    pass
+    os.system('uci delete ss-switch.@ss_entry[%d]'%id)
+    os.system('uci commit ss-switch')
 
 def use(id):
-    pass
+    os.system('uci set shadowsocks.@shadowsocks[-1].server = $(uci get ss-switch.@ss_entry[%d].ip)'%id)
+    os.system('uci set shadowsocks.@shadowsocks[-1].server_port = $(uci get ss-switch.@ss_entry[%d].port)'%id)
+    os.system('uci set shadowsocks.@shadowsocks[-1].password = $(uci get ss-switch.@ss_entry[%d].password)'%id)
+    os.system('uci commit shadowsocks')
 
 def show():
-	pass
+	os.system('uci show ss-switch')
 
 
 if __name__ == '__main__':
+    if not os.path.exists('/etc/config/ss-switch'):
+        open('/etc/config/ss-switch','rw')
     mode = 'None'
     help = '''usage: ss-switch <operation>
 Operations:
     add             add a new entry.
-    delete value    delete an existed entry by ID.
     show            show all entries.
-    use value       choose an entry by ID to use.'''
+    use ID       choose an entry by ID to use.
+    delete ID    delete an existed entry by ID.'''
     if len(sys.argv)>1:
         mode = str(sys.argv[1]).lower()
     if mode in ['use','delete'] and len(sys.argv)<=2:
@@ -45,6 +60,7 @@ Operations:
     	elif mode == 'show':
         	show()
     	elif mode == 'use':
+            v = int(sys.argv[2])
             use(v)
         else:
             print help
