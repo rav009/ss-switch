@@ -44,7 +44,8 @@ Operations:
     add             add a new entry.
     show            show all entries.
     use ID       choose an entry by ID to use.
-    delete ID    delete an existed entry by ID.'''
+    delete ID    delete an existed entry by ID.
+ID is the index of UCI config section(start with 0).'''
     if len(sys.argv)>1:
         mode = str(sys.argv[1]).lower()
     if mode in ['use','delete'] and len(sys.argv)<=2:
