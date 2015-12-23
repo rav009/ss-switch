@@ -13,10 +13,11 @@ For those people who have multiple Shadowsocks servers, this tool can easily swi
 3. Now you can type "ss-switch" in the command line to use this tool.
 
 ##Instruction:
-* At first,if your SS servers have common port and password,you can set default value for them by the command line "ss-switch setdefault"(e.g. ss-switch setdefault 1078 password).
-* Use "ss-switch add" to add an entry for each SS servers.
-* Use "ss-switch show" to show all the entries added.Each entry will be assigned a integer as its ID.
-* Use "ss-switch use <ID>" to choose one entry to use.
-* Use "ss-switch ping <ID>" to show the ping information of a SS server.
-* Use "ss-switch delete <ID>" to delete an entry.
-* You can also view this help information by typing "ss-switch -h".
+- At first,if your SS servers have common port and password,you can set default value for them by the command line "ss-switch setdefault"(e.g. ss-switch setdefault 1078 password).
+- Use "ss-switch add" to add an entry for each SS servers.
+- Use "ss-switch show" to show all the entries added.Each entry will be assigned a integer as its ID.
+- Use "ss-switch use `<id>`" to choose one entry to use.
+- Use "ss-switch ping `<id>`" to show the ping information of a SS server.
+- Use "ss-switch delete `<id>`" to delete an entry.
+- You can also view this help information by typing "ss-switch -h".
+
