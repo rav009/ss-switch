@@ -31,10 +31,11 @@ def delete(id):
 
 
 def use(id):
-	os.system('uci set shadowsocks.@shadowsocks[-1].server = $(uci get ss-switch.@ss_entry[%d].ip)'%id)
-	os.system('uci set shadowsocks.@shadowsocks[-1].server_port = $(uci get ss-switch.@ss_entry[%d].port)'%id)
-	os.system('uci set shadowsocks.@shadowsocks[-1].password = $(uci get ss-switch.@ss_entry[%d].password)'%id)
+	os.system('uci set shadowsocks.@shadowsocks[0].server=$(uci get ss-switch.@ss_entry[%d].ip)'%id)
+	os.system('uci set shadowsocks.@shadowsocks[0].server_port=$(uci get ss-switch.@ss_entry[%d].port)'%id)
+	os.system('uci set shadowsocks.@shadowsocks[0].password=$(uci get ss-switch.@ss_entry[%d].password)'%id)
 	os.system('uci commit shadowsocks')
+	os.system('/etc/init.d/shadowsocks restart')
 
 
 def show():
@@ -44,19 +45,19 @@ def show():
 	n = sections.count('config ss_entry')
 	for i in range(0,n):
 		print 'ID: %d'%i
-		os.system('uci get ss-switch.@ss_entry[%d]'%i)
+		os.system('uci show ss-switch.@ss_entry[%d]'%i)
 
 
 def ping(id):
-	os.system('ping -c4 $(uci get ss-switch.@ss_entry[%id].ip)'%id)
+	os.system('ping -c4 $(uci get ss-switch.@ss_entry[%d].ip)'%id)
 	
 
 def setDefault(port, psd):
 	if not port.isdigit():
 		raise Exception('Port is not a valid number.')
 	os.system('uci set ss-switch.default_set=portpsd')
-	os.system('uci set ss-switch.default_set.port =%d'%int(port))
-	os.system('uci set ss-switch.default_set.password ="%s"'%psd)
+	os.system('uci set ss-switch.default_set.port=%d'%int(port))
+	os.system('uci set ss-switch.default_set.password="%s"'%psd)
 	os.system('uci commit ss-switch')
 
 
@@ -89,6 +90,7 @@ if __name__ == '__main__':
 			show()
 		elif mode == 'use':
 			v = int(sys.argv[2])
+			use(v)
 		elif mode == 'ping':
 			v = int(sys.argv[2])
 			ping(v)
