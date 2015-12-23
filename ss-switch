@@ -4,64 +4,97 @@ import sys
 import os
 
 def add():
-    name = raw_input('Please input a name for this entry: ')
-    port = raw_input('Please input the port number: ')
-    ip = raw_input('Please input the ip address: ')
-    password = raw_input('Please input the password: ')
-    if not port.isdigit():
-        raise Exception('Port is not a valid number.')
-    else:
-        port = int(port)
-    os.system('uci add ss-switch ss_entry')
-    os.system('uci set ss-switch.@ss_entry[-1].name="%s"'%name)
-    os.system('uci set ss-switch.@ss_entry[-1].ip="%s"'%ip)
-    os.system('uci set ss-switch.@ss_entry[-1].port=%d'%port)
-    os.system('uci set ss-switch.@ss_entry[-1].password="%s"'%password)
-    os.system('uci commit ss-switch')
-    return
+	name = raw_input('Please input a name for this entry: ')
+	ip = raw_input('Please input the ip address: ')
+	port = raw_input('Please input the port number(directly Enter to use default value): ')
+	password = raw_input('Please input the password(directly Enter to use default value): ')
+	os.system('uci add ss-switch ss_entry')
+	os.system('uci set ss-switch.@ss_entry[-1].name="%s"'%name)
+	os.system('uci set ss-switch.@ss_entry[-1].ip="%s"'%ip)
+	if not port or str(port).strip() == '':
+		os.system('uci set ss-switch.@ss_entry[-1].port=$(uci get ss-switch.default_set.port)')
+	else:
+		if not port.isdigit():
+			raise Exception('Port is not a valid number.')
+		else:
+			port = int(port)
+		os.system('uci set ss-switch.@ss_entry[-1].port=%d'%port)
+	if not password or str(password).strip() == '':
+		os.system('uci set ss-switch.@ss_entry[-1].password=$(uci get ss-switch.default_set.password)')
+	else:
+		os.system('uci set ss-switch.@ss_entry[-1].password="%s"'%password)
+	os.system('uci commit ss-switch')
+	return
+
 
 def delete(id):
-    os.system('uci delete ss-switch.@ss_entry[%d]'%id)
-    os.system('uci commit ss-switch')
+	os.system('uci delete ss-switch.@ss_entry[%d]'%id)
+	os.system('uci commit ss-switch')
+
 
 def use(id):
-    os.system('uci set shadowsocks.@shadowsocks[-1].server = $(uci get ss-switch.@ss_entry[%d].ip)'%id)
-    os.system('uci set shadowsocks.@shadowsocks[-1].server_port = $(uci get ss-switch.@ss_entry[%d].port)'%id)
-    os.system('uci set shadowsocks.@shadowsocks[-1].password = $(uci get ss-switch.@ss_entry[%d].password)'%id)
-    os.system('uci commit shadowsocks')
+	os.system('uci set shadowsocks.@shadowsocks[-1].server = $(uci get ss-switch.@ss_entry[%d].ip)'%id)
+	os.system('uci set shadowsocks.@shadowsocks[-1].server_port = $(uci get ss-switch.@ss_entry[%d].port)'%id)
+	os.system('uci set shadowsocks.@shadowsocks[-1].password = $(uci get ss-switch.@ss_entry[%d].password)'%id)
+	os.system('uci commit shadowsocks')
+
 
 def show():
-	os.system('uci show ss-switch')
+	f = open('/etc/config/ss-switch','r');
+	sections = f.read()
+	f.close()
+	n = sections.count('config ss_entry')
+	for i in range(0,n):
+		print 'ID: %d'%i
+		os.system('uci get ss-switch.@ss_entry[%d]'%i)
+
+
+def ping(id):
+	os.system('ping -c4 $(uci get ss-switch.@ss_entry[%id].ip)'%id)
+	
+
+def setDefault(port, psd):
+	os.system('uci set ss-switch.default_set=portpsd')
+	os.system('uci set ss-switch.default_set.port =%d'%port)
+	os.system('uci set ss-switch.default_set.password ="%s"'%psd)
+	os.system('uci commit ss-switch')
 
 
 if __name__ == '__main__':
-    if not os.path.exists('/etc/config/ss-switch'):
-        f=open('/etc/config/ss-switch','w')
-	f.close()
-    mode = 'None'
-    help = '''usage: ss-switch <operation>
-Operations:
-    add             add a new entry.
-    show            show all entries.
-    use ID       choose an entry by ID to use.
-    delete ID    delete an existed entry by ID.
-ID is the index of UCI config section(start with 0).'''
-    if len(sys.argv)>1:
-        mode = str(sys.argv[1]).lower()
-    if mode in ['use','delete'] and len(sys.argv)<=2:
-        print help
-    elif mode in ['use','delete'] and str(sys.argv[2]).isdigit() == False:
-        print help
-    else:
-    	if mode == 'add':
-            add()
-    	elif mode == 'delete':
-            v = int(sys.argv[2])
-            delete(v)
-    	elif mode == 'show':
-        	show()
-    	elif mode == 'use':
-            v = int(sys.argv[2])
-            use(v)
-        else:
-            print help
+	if not os.path.exists('/etc/config/ss-switch'):
+		os.system('touch /etc/config/ss-switch')
+	mode = 'None'
+	help = 'usage: ss-switch <operation>\nOperations:\n\
+\tadd\t\tadd a new entry.\n\
+\tshow\t\tshow all entries.\n\
+\tuse \033[4mID\033[0m\t\tchoose an entry by ID to use.\n\
+\tdelete \033[4mID\033[0m\tdelete an existed entry by ID.\n\
+\tping \033[4mID\033[0m\t\tshow the ping info of an entry.\n\
+\tsetdefault \033[4mPort\033[0m \033[4mPassword\033[0m\n\
+\t\t\tset the default value for port and password.\n\
+\033[4mID\033[0m is the index of UCI config section(start with 0).'
+	if len(sys.argv)>1:
+		mode = str(sys.argv[1]).lower()
+	if mode in ['use','delete'] and len(sys.argv)<=2:
+		print help
+	elif mode in ['use','delete'] and str(sys.argv[2]).isdigit() == False:
+		print help
+	else:
+		if mode == 'add':
+			add()
+		elif mode == 'delete':
+			v = int(sys.argv[2])
+			delete(v)
+		elif mode == 'show':
+			show()
+		elif mode == 'use':
+			v = int(sys.argv[2])
+		elif mode == 'ping':
+			v = int(sys.argv[2])
+			ping(v)
+		elif mode == 'setdefault':
+			port = int(sys.argv[2])
+			password = str(sys.argv[3])
+			setDefault(port, password)
+		else:
+			print help
