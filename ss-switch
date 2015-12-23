@@ -5,11 +5,15 @@ import os
 
 def add():
 	name = raw_input('Please input a name for this entry: ')
+	encrypt = raw_input('Please input the encrypt mode(directly Enter to use rc4-md5): ')
+	if not encrypt or str(encrypt).strip()=='':
+		encrypt = 'rc4-md5'
 	ip = raw_input('Please input the ip address: ')
 	port = raw_input('Please input the port number(directly Enter to use default value): ')
 	password = raw_input('Please input the password(directly Enter to use default value): ')
 	os.system('uci add ss-switch ss_entry')
 	os.system('uci set ss-switch.@ss_entry[-1].name="%s"'%name)
+	os.system('uci set ss-switch.@ss_entry[-1].encrypt="%s"'%encrypt)
 	os.system('uci set ss-switch.@ss_entry[-1].ip="%s"'%ip)
 	if not port or str(port).strip() == '':
 		os.system('uci set ss-switch.@ss_entry[-1].port=$(uci get ss-switch.default_set.port)')
@@ -34,6 +38,7 @@ def use(id):
 	os.system('uci set shadowsocks.@shadowsocks[0].server=$(uci get ss-switch.@ss_entry[%d].ip)'%id)
 	os.system('uci set shadowsocks.@shadowsocks[0].server_port=$(uci get ss-switch.@ss_entry[%d].port)'%id)
 	os.system('uci set shadowsocks.@shadowsocks[0].password=$(uci get ss-switch.@ss_entry[%d].password)'%id)
+	os.system('uci set shadowsocks.@shadowsocks[0].encrypt_method=$(uci get ss-switch.@ss_entry[%d].encrypt)'%id)
 	os.system('uci commit shadowsocks')
 	os.system('/etc/init.d/shadowsocks restart')
 
