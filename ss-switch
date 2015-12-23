@@ -16,6 +16,7 @@ def add():
 	else:
 		if not port.isdigit():
 			raise Exception('Port is not a valid number.')
+			return
 		else:
 			port = int(port)
 		os.system('uci set ss-switch.@ss_entry[-1].port=%d'%port)
@@ -54,6 +55,9 @@ def ping(id):
 	
 
 def setDefault(port, psd):
+	if not port.isdigit():
+		raise Exception('Port is not a valid number.')
+		return
 	os.system('uci set ss-switch.default_set=portpsd')
 	os.system('uci set ss-switch.default_set.port =%d'%port)
 	os.system('uci set ss-switch.default_set.password ="%s"'%psd)
