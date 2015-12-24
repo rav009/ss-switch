@@ -5,7 +5,7 @@ For those people who have multiple Shadowsocks servers, this tool can easily swi
 
 ##Requirments:
 - OS: Openwrt
-- Package Dependency: openwrt-shadowsocks,python-mini
+- Package Dependency: openwrt-shadowsocks, python-mini
 
 ##Installation:
 1. Copy the file "ss-switch" into directory "/usr/bin/".
@@ -15,7 +15,7 @@ For those people who have multiple Shadowsocks servers, this tool can easily swi
 ##Instruction:
 - At first,if your SS servers have common port and password,you can set default value for them by the command line "ss-switch setdefault"(e.g. ss-switch setdefault 33078 password).
 - Use "ss-switch add" to add an entry for each SS servers.
-- Use "ss-switch show" to the SS status and all entries added.Each entry will be assigned a integer as its ID.
+- Use "ss-switch show" to show the current SS status and all entries added.Each entry will be assigned a integer as its ID.
 - Use "ss-switch use `<id>`" to choose one entry to use.
 - Use "ss-switch ping `<id>`" to show the ping information of a SS server.
 - Use "ss-switch delete `<id>`" to delete an entry.
