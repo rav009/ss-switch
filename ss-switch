@@ -44,6 +44,9 @@ def use(id):
 
 
 def show():
+	os.system('echo shadowsocks status: enable=$(uci get shadowsocks.@shadowsocks[0].enable) \
+server=$(uci get shadowsocks.@shadowsocks[0].server) \
+port=$(uci get shadowsocks.@shadowsocks[0].server_port)')
 	f = open('/etc/config/ss-switch','r');
 	sections = f.read()
 	f.close()
@@ -64,6 +67,15 @@ def setDefault(port, psd):
 	os.system('uci set ss-switch.default_set.port=%d'%int(port))
 	os.system('uci set ss-switch.default_set.password="%s"'%psd)
 	os.system('uci commit ss-switch')
+	
+
+def turn(s):
+	if s==1:
+		os.system('uci set shadowsocks.@shadowsocks[0].enable=1')
+	else:
+		os.system('uci set shadowsocks.@shadowsocks[0].enable=0')
+	os.system('uci commit shadowsocks')
+	os.system('/etc/init.d/shadowsocks restart')
 
 
 if __name__ == '__main__':
@@ -72,8 +84,10 @@ if __name__ == '__main__':
 	mode = 'None'
 	help = 'usage: ss-switch <operation>\nOperations:\n\
 \tadd\t\tadd a new entry.\n\
-\tshow\t\tshow all entries.\n\
+\tshow\t\tshow the status of SS and all entries added.\n\
 \tuse \033[4mID\033[0m\t\tchoose an entry by ID to use.\n\
+\ton\t\tturn on shadowsocks.\n\
+\toff\t\tturn off shadowsocks.\n\
 \tdelete \033[4mID\033[0m\tdelete an existed entry by ID.\n\
 \tping \033[4mID\033[0m\t\tshow the ping info of an entry.\n\
 \tsetdefault \033[4mPort\033[0m \033[4mPassword\033[0m\n\
@@ -103,5 +117,9 @@ if __name__ == '__main__':
 			port = str(sys.argv[2])
 			password = str(sys.argv[3])
 			setDefault(port, password)
+		elif mode == 'on':
+			turn(1)
+		elif mode == 'off':
+			turn(0)
 		else:
 			print help
