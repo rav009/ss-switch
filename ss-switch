@@ -53,7 +53,10 @@ port=$(uci get shadowsocks.@shadowsocks[0].server_port)')
 	n = sections.count('config ss_entry')
 	for i in range(0,n):
 		print 'ID: %d'%i
-		os.system('uci show ss-switch.@ss_entry[%d]'%i)
+		os.system('echo [$(uci get ss-switch.@ss_entry[%d].name)] \
+$(uci get ss-switch.@ss_entry[%d].ip):$(uci get ss-switch.@ss_entry[%d].port) \
+$(uci get ss-switch.@ss_entry[%d].password)\\($(uci get ss-switch.@ss_entry[%d].encrypt)\\)\
+'%(i,i,i,i,i))
 
 
 def ping(id):
