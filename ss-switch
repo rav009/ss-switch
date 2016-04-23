@@ -32,7 +32,8 @@ def add():
 def delete(id):
 	os.system('uci delete ss-switch.@ss_entry[%d]'%id)
 	os.system('uci commit ss-switch')
-
+	print 'After delete an entry, the ID of other entries may be changed.'
+	show()
 
 def use(id):
 	os.system('uci set shadowsocks.@shadowsocks[0].server=$(uci get ss-switch.@ss_entry[%d].ip)'%id)
