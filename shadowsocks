@@ -1,0 +1,21 @@
+
+config shadowsocks
+	option local_port '1080'
+	option timeout '60'
+	option udp_mode '0'
+	option tunnel_port '5300'
+	option tunnel_forward '8.8.4.4:53'
+	option auth_enable '0'
+	option tunnel_enable '0'
+	option lan_ac_mode '1'
+	option ignore_list '/etc/ignore.list'
+	list lan_ac_ip '192.168.2.173'
+	list lan_ac_ip '192.168.2.240'
+	list lan_ac_ip '192.168.2.124'
+	list lan_ac_ip '192.168.2.212'
+	option server_port '42370'
+	option password '12312312'
+	option encrypt_method 'chacha20'
+	option server '111.111.111.114'
+	option enable '0'
+
