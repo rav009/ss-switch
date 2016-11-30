@@ -5,9 +5,9 @@ import os
 
 def add():
 	name = raw_input('Please input a name for this entry: ')
-	encrypt = raw_input('Please input the encrypt mode(directly Enter to use rc4-md5): ')
+	encrypt = raw_input('Please input the encrypt mode(directly Enter to use aes-256-cfb): ')
 	if not encrypt or str(encrypt).strip()=='':
-		encrypt = 'rc4-md5'
+		encrypt = 'aes-256-cfb'
 	ip = raw_input('Please input the ip address: ')
 	port = raw_input('Please input the port number(directly Enter to use default value): ')
 	password = raw_input('Please input the password(directly Enter to use default value): ')
@@ -34,6 +34,7 @@ def delete(id):
 	os.system('uci commit ss-switch')
 	print 'After deleting an entry, the ID of other entries may be changed.'
 	show()
+
 
 def use(id):
 	os.system('uci set shadowsocks.@shadowsocks[0].server=$(uci get ss-switch.@ss_entry[%d].ip)'%id)
