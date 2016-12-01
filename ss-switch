@@ -5,12 +5,12 @@ import os
 
 def add():
 	name = raw_input('Please input a name for this entry: ')
-	encrypt = raw_input('Please input the encrypt mode(directly Enter to use aes-256-cfb): ')
-	if not encrypt or str(encrypt).strip()=='':
-		encrypt = 'aes-256-cfb'
 	ip = raw_input('Please input the ip address: ')
 	port = raw_input('Please input the port number(directly Enter to use default value): ')
 	password = raw_input('Please input the password(directly Enter to use default value): ')
+	encrypt = raw_input('Please input the encrypt mode(directly Enter to use aes-256-cfb): ')
+	if not encrypt or str(encrypt).strip()=='':
+		encrypt = 'aes-256-cfb'
 	os.system('uci add ss-switch ss_entry')
 	os.system('uci set ss-switch.@ss_entry[-1].name="%s"'%name)
 	os.system('uci set ss-switch.@ss_entry[-1].encrypt="%s"'%encrypt)
@@ -28,13 +28,11 @@ def add():
 	os.system('uci commit ss-switch')
 	return
 
-
 def delete(id):
 	os.system('uci delete ss-switch.@ss_entry[%d]'%id)
 	os.system('uci commit ss-switch')
 	print 'After deleting an entry, the ID of other entries may be changed.'
 	show()
-
 
 def use(id):
 	os.system('uci set shadowsocks.@shadowsocks[0].server=$(uci get ss-switch.@ss_entry[%d].ip)'%id)
@@ -43,7 +41,6 @@ def use(id):
 	os.system('uci set shadowsocks.@shadowsocks[0].encrypt_method=$(uci get ss-switch.@ss_entry[%d].encrypt)'%id)
 	os.system('uci commit shadowsocks')
 	os.system('/etc/init.d/shadowsocks restart')
-
 
 def show():
 	os.system('echo shadowsocks status: enable=$(uci get shadowsocks.@shadowsocks[0].enable) \
@@ -60,11 +57,9 @@ $(uci get ss-switch.@ss_entry[%d].ip):$(uci get ss-switch.@ss_entry[%d].port) \
 $(uci get ss-switch.@ss_entry[%d].password)\\($(uci get ss-switch.@ss_entry[%d].encrypt)\\)\
 '%(i,i,i,i,i))
 
-
 def ping(id):
 	os.system('ping -c4 $(uci get ss-switch.@ss_entry[%d].ip)'%id)
 	
-
 def setDefault(port, psd):
 	if not port.isdigit():
 		raise Exception('Port is not a valid number.')
@@ -73,7 +68,6 @@ def setDefault(port, psd):
 	os.system('uci set ss-switch.default_set.password="%s"'%psd)
 	os.system('uci commit ss-switch')
 	
-
 def turn(s):
 	if s==1:
 		os.system('uci set shadowsocks.@shadowsocks[0].enable=1')
@@ -81,7 +75,15 @@ def turn(s):
 		os.system('uci set shadowsocks.@shadowsocks[0].enable=0')
 	os.system('uci commit shadowsocks')
 	os.system('/etc/init.d/shadowsocks restart')
+	
+def ip():
+	os.system('uci show shadowsocks.@shadowsocks[0].lan_ac_ip)
 
+def allow(ip):
+	os.system('uci add_list shadowsocks.@shadowsocks[0].lan_ac_ip="%s"'%(ip))
+
+def ban(ip):
+	os.system('uci del_list shadowsocks.@shadowsocks[0].lan_ac_ip="%s"'%(ip))
 
 if __name__ == '__main__':
 	if not os.path.exists('/etc/config/ss-switch'):
@@ -97,7 +99,10 @@ if __name__ == '__main__':
 \tping \033[4mID\033[0m\t\tshow the ping info of an entry.\n\
 \tsetdefault \033[4mPort\033[0m \033[4mPassword\033[0m\n\
 \t\t\tset the default value for port and password.\n\
-\033[4mID\033[0m is the index of UCI config section(start with 0).'
+\033[4mID\033[0m is the index of UCI config section(start with 0).\
+\tip\t\tshow the IP allowed to use SS.\n\
+\tallow \033[4mIP\033[0m\t\tAllow certain IP to access SS.\n\
+\tban \033[4mIP\033[0m\t\tBan certain IP from using SS.\n'
 	if len(sys.argv)>1:
 		mode = str(sys.argv[1]).lower()
 	if mode in ['use','delete'] and len(sys.argv)<=2:
