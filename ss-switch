@@ -68,22 +68,27 @@ def setDefault(port, psd):
 	os.system('uci set ss-switch.default_set.password="%s"'%psd)
 	os.system('uci commit ss-switch')
 	
+def commit_restart():
+	os.system('uci commit shadowsocks')
+	os.system('/etc/init.d/shadowsocks restart')
+	
 def turn(s):
 	if s==1:
 		os.system('uci set shadowsocks.@shadowsocks[0].enable=1')
 	else:
 		os.system('uci set shadowsocks.@shadowsocks[0].enable=0')
-	os.system('uci commit shadowsocks')
-	os.system('/etc/init.d/shadowsocks restart')
+	commit_restart()
 	
 def ip():
 	os.system('uci get shadowsocks.@shadowsocks[0].lan_ac_ip')
 
 def allow(ip):
 	os.system('uci add_list shadowsocks.@shadowsocks[0].lan_ac_ip="%s"'%(ip))
+	commit_restart()
 
 def ban(ip):
 	os.system('uci del_list shadowsocks.@shadowsocks[0].lan_ac_ip="%s"'%(ip))
+	commit_restart()
 
 if __name__ == '__main__':
 	if not os.path.exists('/etc/config/ss-switch'):
