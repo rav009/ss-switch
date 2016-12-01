@@ -104,7 +104,7 @@ if __name__ == '__main__':
 \tping \033[4mID\033[0m\t\tshow the ping info of an entry.\n\
 \tsetdefault \033[4mPort\033[0m \033[4mPassword\033[0m\n\
 \t\t\tset the default value for port and password.\n\
-\033[4mID\033[0m is the index of UCI config section(start with 0).\
+\033[4mID\033[0m is the index of UCI config section(start with 0).\n\
 \tip\t\tshow the IP allowed to use SS.\n\
 \tallow \033[4mIP\033[0m\t\tAllow certain IP to access SS.\n\
 \tban \033[4mIP\033[0m\t\tBan certain IP from using SS.\n'
