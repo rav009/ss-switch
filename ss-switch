@@ -131,5 +131,11 @@ if __name__ == '__main__':
 			turn(1)
 		elif mode == 'off':
 			turn(0)
+		elif mode == 'ip':
+		  	ip()
+		elif mode == 'allow':
+		  	allow(str(sys.argv[2]))
+		elif mode == 'ban':
+		  	ban(str(sys.argv[2]))
 		else:
 			print help
