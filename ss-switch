@@ -77,7 +77,7 @@ def turn(s):
 	os.system('/etc/init.d/shadowsocks restart')
 	
 def ip():
-	os.system('uci show shadowsocks.@shadowsocks[0].lan_ac_ip)
+	os.system('uci get shadowsocks.@shadowsocks[0].lan_ac_ip')
 
 def allow(ip):
 	os.system('uci add_list shadowsocks.@shadowsocks[0].lan_ac_ip="%s"'%(ip))
