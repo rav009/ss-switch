@@ -21,5 +21,8 @@ For those people who have multiple Shadowsocks servers, this tool can easily swi
 - Use "ss-switch delete `<id>`" to delete an entry.
 - Use "ss-switch on" to turn on SS.
 - Use "ss-switch off" to turn off SS.
+- Use "ss-switch ip" to get the list of IPs allowed to access SS.
+- Use "ss-switch allow `<ip>`" to allow certain IP to access SS.
+- Use "ss-switch ban `<ip>`" to ban certain IP from the access of SS.
 - You can also view this help information by typing "ss-switch -h".
 
