@@ -43,9 +43,6 @@ def use(id):
 	os.system('/etc/init.d/shadowsocks restart')
 
 def show():
-	os.system('echo shadowsocks status: enable=$(uci get shadowsocks.@shadowsocks[0].enable) \
-server=$(uci get shadowsocks.@shadowsocks[0].server) \
-port=$(uci get shadowsocks.@shadowsocks[0].server_port)')
 	f = open('/etc/config/ss-switch','r');
 	sections = f.read()
 	f.close()
@@ -56,6 +53,11 @@ port=$(uci get shadowsocks.@shadowsocks[0].server_port)')
 $(uci get ss-switch.@ss_entry[%d].ip):$(uci get ss-switch.@ss_entry[%d].port) \
 $(uci get ss-switch.@ss_entry[%d].password)\\($(uci get ss-switch.@ss_entry[%d].encrypt)\\)\
 '%(i,i,i,i,i))
+	os.system('echo SS status: enable=$(uci get shadowsocks.@shadowsocks[0].enable) \
+server=$(uci get shadowsocks.@shadowsocks[0].server) \
+port=$(uci get shadowsocks.@shadowsocks[0].server_port)')
+	os.system('echo IP allowed:$(uci get shadowsocks.@shadowsocks[0].lan_ac_ip)')
+
 
 def ping(id):
 	os.system('ping -c4 $(uci get ss-switch.@ss_entry[%d].ip)'%id)
