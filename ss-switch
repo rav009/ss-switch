@@ -48,14 +48,15 @@ def show():
 	f.close()
 	n = sections.count('config ss_entry')
 	for i in range(0,n):
-		print 'ID: %d'%i
-		os.system('echo [$(uci get ss-switch.@ss_entry[%d].name)] \
+		#print 'ID: %d'%i
+		os.system('echo ID:%d [$(uci get ss-switch.@ss_entry[%d].name)] \
 $(uci get ss-switch.@ss_entry[%d].ip):$(uci get ss-switch.@ss_entry[%d].port) \
 $(uci get ss-switch.@ss_entry[%d].password)\\($(uci get ss-switch.@ss_entry[%d].encrypt)\\)\
-'%(i,i,i,i,i))
+'%(i,i,i,i,i,i))
 	os.system('echo SS status: enable=$(uci get shadowsocks.@shadowsocks[0].enable) \
 server=$(uci get shadowsocks.@shadowsocks[0].server) \
-port=$(uci get shadowsocks.@shadowsocks[0].server_port)')
+port=$(uci get shadowsocks.@shadowsocks[0].server_port) \
+udp=$(uci get shadowsocks.@shadowsocks[0].tunnel_enable)')
 	os.system('echo IP allowed:$(uci get shadowsocks.@shadowsocks[0].lan_ac_ip)')
 
 
