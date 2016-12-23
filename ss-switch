@@ -150,6 +150,6 @@ if __name__ == '__main__':
 		elif mode == 'ban':
 		  	ban(str(sys.argv[2]))
                 elif mode == 'udp':
-                        udp(1 if str(sys.argv[2]) == 'on' else 0)
+                        udp(1 if str(sys.argv[2]) in ('on','1') else 0)
 		else:
 			print help
