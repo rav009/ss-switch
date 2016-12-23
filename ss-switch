@@ -43,7 +43,7 @@ def use(id):
 	os.system('/etc/init.d/shadowsocks restart')
 
 def udp(v):
-	os.system('uci set shadowsocks.@shadowsocks[0].udp_mode=%d'%v)
+	os.system('uci set shadowsocks.@shadowsocks[0].tunnel_enable=%d'%v)
 
 def show():
 	f = open('/etc/config/ss-switch','r');
@@ -113,7 +113,7 @@ if __name__ == '__main__':
 \033[4mID\033[0m is the index of UCI config section(start with 0).\n\
 \tip\t\tshow the IP allowed to use SS.\n\
 \tallow \033[4mIP\033[0m\tallow certain IP to access SS.\n\
-\tban \033[4mIP\033[0m\t\tban certain IP from using SS.\n
+\tban \033[4mIP\033[0m\t\tban certain IP from using SS.\n\
 \tudp \033[4mIP\033[0m\t\tThis command will not commit uci config.(ss-switch udp off/ss-switch udp on)\n'
 	if len(sys.argv)>1:
 		mode = str(sys.argv[1]).lower()
@@ -150,6 +150,6 @@ if __name__ == '__main__':
 		elif mode == 'ban':
 		  	ban(str(sys.argv[2]))
                 elif mode == 'udp':
-                        upd(1 if str(sys.argv[2]) == 'on' else 0)
+                        udp(1 if str(sys.argv[2]) == 'on' else 0)
 		else:
 			print help
