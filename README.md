@@ -5,7 +5,7 @@ For those people who have multiple Shadowsocks servers, this tool can easily swi
 
 ##Requirments:
 - OS: Openwrt
-- Package Dependency: openwrt-shadowsocks, python-mini
+- Package Dependency: openwrt-shadowsocks, python-mini, ss-rules
 
 ##Installation:
 1. Copy the file "ss-switch" into directory "/usr/bin/".
@@ -24,5 +24,6 @@ For those people who have multiple Shadowsocks servers, this tool can easily swi
 - Use "ss-switch ip" to get the list of IPs allowed to access SS.
 - Use "ss-switch allow `<ip>`" to allow certain IP to access SS.
 - Use "ss-switch ban `<ip>`" to ban certain IP from the access of SS.
+- Use "ss-switch udp `on/off`" to turn on udp mode or turn it off.This command will not commit uci config,so use it with command 'use'.
 - You can also view this help information by typing "ss-switch -h".
 
